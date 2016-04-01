@@ -9,34 +9,41 @@ __all__ = ['ant_correction', 'flux_density_scale', 'phase_cal_init',
 
 
 def ant_correction(vis, caltable_out):
+    print 'Generating Antenna Position Calibration'
     gencal(vis=vis, caltable=caltable_out, caltype='antpos')
 
 
 def flux_density_scale(vis, **kwargs):
+    print 'Setting Flux Density Scale'
     setjy(vis=vis, **kwargs)
 
 
 def phase_cal_init(vis, caltable_out, caltable_in=None, **kwargs):
+    print 'Generating Phase Calibrations'
     gaincal(vis=vis, caltable=caltable_out, gaintable=caltable_in,
             gaintype='G', calmode='p', solint='int', **kwargs)
 
 
 def delay_cal(vis, caltable_out, caltable_in=None, **kwargs):
+    print 'Generating Delay Calibrations'
     gaincal(vis=vis, caltable=caltable_out, gaintable=caltable_in,
             gaintype='K', solint='inf', combine='scan', **kwargs)
 
 
 def bandpass_cal(vis, caltable_out, caltable_in=None, **kwargs):
+    print 'Generating Bandpass Calibrations'
     bandpass(vis=vis, caltable=caltable_out, solnorm=True, combine='scan',
              solint='inf', bandtype='B', gaintable=caltable_in, **kwargs)
 
 
 def complex_gain_cal(vis, caltable_out, caltable_in=None, **kwargs):
+    print 'Generating Complex Gain Calibrations'
     gaincal(vis=vis, caltable=caltable_out, solint='inf', gaintype='G',
             calmode='ap', solnorm=False, gaintable=caltable_in, **kwargs)
 
 
 def apply_calibration(vis, caltables, **kwargs):
+    print 'Applying Calibrations to the Visibility'
     applycal(vis, gaintable=caltables)
 
 
