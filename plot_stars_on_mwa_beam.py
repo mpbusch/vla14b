@@ -6,9 +6,15 @@ from astropy.coordinates import SkyCoord
 from astropy.wcs.utils import skycoord_to_pixel
 from scipy.ndimage import map_coordinates
 
-hdul = fits.open('/data3/piyanat/runs/shared/vis_interp_delta_21cm_l128_0.000h_151.075MHz_Beam_XX.fits')
-hdu2 = hdul[0]
-wcs2 = WCS(hdu2.header)
+'''
+The following code will plot an input of sources over the primary beam of the MWA, it awill also plot the galaxy.
+
+Author: Boom Kittiwisit
+'''
+
+# hdul = fits.open('/data3/piyanat/runs/shared/vis_interp_delta_21cm_l128_0.000h_151.075MHz_Beam_XX.fits')
+# hdu2 = hdul[0]
+# wcs2 = WCS(hdu2.header)
 
 #arr = np.empty((360, 180))
 x = np.arange(180, -180, -1)
@@ -20,11 +26,13 @@ pixels = skycoord_to_pixel(coords, wcs2)
 arr = map_coordinates(hdu2.data, pixels)
 arr.shape = (180, 360)
 
+# Load a Healpix map of the galaxy.
 gal = np.load("GalaxyMap.npy")
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.contour(x, y, arr, [0.01])
+# Plot the galaxy.
 ax.imshow(np.log10(gal), extent=[-180, 180, -90, 90], cmap=plt.cm.gray,
           origin='lower')
 ax.set_xlabel('RA [degree]')
@@ -39,11 +47,14 @@ plt.grid('on')
 #star_ra = [10, 35, -20]
 #star_dec = [0, -10, 25]
 
+# Load a list of RA and DEC from a file, in this case: vla_coords.csv.
 star_ra, star_dec = np.genfromtxt('vla_coords.csv', delimiter=',', unpack=True)
 
+# Plot the RA, DEC of each source. Adjust color as needed.
 for ra, dec in zip(star_ra, star_dec):
     ax.scatter(ra, dec, marker='*', color='white')
 
+# Turn on minor ticks.
 plt.minorticks_on()
 
 plt.show()
